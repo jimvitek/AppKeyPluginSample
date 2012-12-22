@@ -47,6 +47,7 @@
      <Compile Include="Assets\Scripts\AppKeyEventListener.cs" />
      <Compile Include="Assets\Scripts\AppKeyManager.cs" />
      <Compile Include="Assets\Scripts\main.cs" />
+     <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
