@@ -6,6 +6,7 @@ public class AppKeyManager : MonoBehaviour {
 	public static event Action appKeyAllowEvent;
 	public static event Action<DontAllowReasons> appKeyDontAllowEvent;
 	public string AppID;
+	public bool AnalyticsEnabled;
 	public enum DontAllowReasons {
 		NOT_INSTALLED=0,
 		NOT_RUNNING=1,
@@ -60,8 +61,8 @@ public class AppKeyManager : MonoBehaviour {
 		
 	protected void _CheckAppKey() {
 		#if UNITY_ANDROID
-			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID), where instance.AppID="+instance.AppID);
-			mAppKeyPlugin.Call("checkAccess",mActivity,instance.AppID);
+			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID, instance.AnalyticsEnabled), where instance.AppID="+instance.AppID+", instance.AnalyticsEnabled="+instance.AnalyticsEnabled);
+			mAppKeyPlugin.Call("checkAccess",mActivity,instance.AppID,instance.AnalyticsEnabled);
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
 		#endif	
@@ -69,8 +70,8 @@ public class AppKeyManager : MonoBehaviour {
 	
 	protected void _CheckAppKeyWithWizard(string premiumContentDescription, string premiumAppURL) {
 		#if UNITY_ANDROID
-			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,premiumContentDescription,premiumAppURL), where instance.AppID="+instance.AppID+", premiumContentDescription="+premiumContentDescription+", premiumAppURL="+premiumAppURL);
-			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,premiumContentDescription,premiumAppURL);
+			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL), where instance.AppID="+instance.AppID+", instance.AnalyticsEnabled="+instance.AnalyticsEnabled+", premiumContentDescription="+premiumContentDescription+", premiumAppURL="+premiumAppURL);
+			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL);
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
 		#endif
