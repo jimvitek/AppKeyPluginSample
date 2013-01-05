@@ -6,13 +6,13 @@ public class AppKeyManager : MonoBehaviour {
 	public static event Action appKeyAllowEvent;
 	public static event Action<DontAllowReasons> appKeyDontAllowEvent;
 	public string AppID;
-	public bool AnalyticsEnabled;
+	public bool UserAnalytics;  // Whether or not to send user behavior analytics to the AppKey platform to optimize your revenue
+	public bool debugLogging;	// Set to true to activate debug logs.
 	public enum DontAllowReasons {
 		NOT_INSTALLED=0,
 		NOT_RUNNING=1,
 		INACTIVE=2
 	}
-	private bool LOGD = true;	// Set to true to activate debug logs.
 	
 #if UNITY_ANDROID
 	private static AndroidJavaClass mAppKeyPluginClass;
@@ -23,7 +23,7 @@ public class AppKeyManager : MonoBehaviour {
 	private static AppKeyManager instance;
 
 	void Start () {
-		if(LOGD) Debug.Log("AppKeyManager: Start() called");
+		if(debugLogging) Debug.Log("AppKeyManager: Start() called");
 		instance=this;
 		
 		if (gameObject.name!="AppKeyManager") Debug.LogError("AppKeyManager: Game object name must be AppKeyManager");
@@ -55,14 +55,14 @@ public class AppKeyManager : MonoBehaviour {
 	}
 
 	public static void CheckAppKeyWithWizard(string premiumContentDescription, string premiumAppURL) {
-		if(instance.LOGD) Debug.Log("AppKeyManager: Checking AppKey with wizard. Premium Content: " + premiumContentDescription + ", Premium App URL: " + premiumAppURL);
+		if(instance.debugLogging) Debug.Log("AppKeyManager: Checking AppKey with wizard. Premium Content: " + premiumContentDescription + ", Premium App URL: " + premiumAppURL);
 		instance._CheckAppKeyWithWizard(premiumContentDescription, premiumAppURL);
 	}
 		
 	protected void _CheckAppKey() {
 		#if UNITY_ANDROID
-			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID, instance.AnalyticsEnabled), where instance.AppID="+instance.AppID+", instance.AnalyticsEnabled="+instance.AnalyticsEnabled);
-			mAppKeyPlugin.Call("checkAccess",mActivity,instance.AppID,instance.AnalyticsEnabled);
+			if (debugLogging) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID, instance.debugLogging, instance.AnalyticsEnabled), where instance.AppID="+instance.AppID+", instance.debugLogging="+instance.debugLogging+", instance.AnalyticsEnabled="+instance.UserAnalytics);
+			mAppKeyPlugin.Call("checkAccess",mActivity,instance.AppID,instance.debugLogging,instance.UserAnalytics);
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
 		#endif	
@@ -70,8 +70,8 @@ public class AppKeyManager : MonoBehaviour {
 	
 	protected void _CheckAppKeyWithWizard(string premiumContentDescription, string premiumAppURL) {
 		#if UNITY_ANDROID
-			if (LOGD) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL), where instance.AppID="+instance.AppID+", instance.AnalyticsEnabled="+instance.AnalyticsEnabled+", premiumContentDescription="+premiumContentDescription+", premiumAppURL="+premiumAppURL);
-			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL);
+			if (debugLogging) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,instance,debugLogging,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL), where instance.AppID="+instance.AppID+", instance.debugLogging="+instance.debugLogging+", instance.AnalyticsEnabled="+instance.UserAnalytics+", premiumContentDescription="+premiumContentDescription+", premiumAppURL="+premiumAppURL);
+			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,instance.debugLogging,instance.UserAnalytics,premiumContentDescription,premiumAppURL);
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
 		#endif
@@ -83,7 +83,7 @@ public class AppKeyManager : MonoBehaviour {
 	
 	public static void OpenAppKeyInStore() {
 		#if UNITY_ANDROID
-			if(instance.LOGD) Debug.Log("AppKeyManager: Opening AppKey store link");
+			if(instance.debugLogging) Debug.Log("AppKeyManager: Opening AppKey store link");
 			Application.OpenURL("https://play.google.com/store/apps/details?id=com.appkey.widget");	
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
@@ -91,7 +91,7 @@ public class AppKeyManager : MonoBehaviour {
 	}
 
 	public void allow(string empty) {
-		if(LOGD) Debug.Log("AppKeyManager: allow() Called");
+		if(debugLogging) Debug.Log("AppKeyManager: allow() Called");
 		if (appKeyAllowEvent!=null) {
 			appKeyAllowEvent();
 		} else {
@@ -101,7 +101,7 @@ public class AppKeyManager : MonoBehaviour {
 	
 
 	public void dontAllow(string strReason) {
-		if(LOGD) Debug.Log("AppKeyManager: dontAllow() Called.  Reason=" + strReason);
+		if(debugLogging) Debug.Log("AppKeyManager: dontAllow() Called.  Reason=" + strReason);
 		DontAllowReasons reason;
 		switch (strReason) {
 			case ("NOT_INSTALLED"):
