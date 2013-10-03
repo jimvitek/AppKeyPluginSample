@@ -28,7 +28,7 @@ public class AppKeyEventListener : MonoBehaviour {
 	public void AppKeyCallback_Allow() {
 		// This will run when AppKey is installed, running, and active on the user's phone.
 		
-		// <Your code here.>
+		// <Your code to ENABLE features for AppKey users goes here.>
 		
 		Debug.Log("AppKey access allowed!");
 	}
@@ -36,7 +36,7 @@ public class AppKeyEventListener : MonoBehaviour {
 	public void AppKeyCallback_DontAllow(AppKeyManager.DontAllowReasons reason) {
 		// This will run when AppKey is not installed or not running.
 		
-		// <Your code here.>
+		// <Your code to DISABLE features for AppKey users goes here.>
 		
 		Debug.Log("AppKey access not allowed for reason of "+reason);
 	}

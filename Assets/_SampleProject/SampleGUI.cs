@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class main : MonoBehaviour {
+public class SampleGUI : MonoBehaviour {
 
 	private string AppKeyResult="";
 	
@@ -26,7 +26,7 @@ public class main : MonoBehaviour {
 		GUI.Label(new Rect(300, 0, 200, 200), "AppKeyResult="+AppKeyResult);
 
 		if (GUI.Button(new Rect(0,300,200,200),"Call AppKey with Wizard")) {
-			AppKeyManager.CheckAppKeyWithWizard("[Premium Features]","");
+			AppKeyManager.CheckAppKeyWithWizard("[My amazing Unity features]");
 		}
 		
 	}

@@ -51,14 +51,10 @@ public class AppKeyManager : MonoBehaviour {
 	}
 	
 	public static void CheckAppKeyWithWizard(string premiumContentDescription) {
+		if(instance.debugLogging) Debug.Log("AppKeyManager: Checking AppKey with wizard. Premium Content: " + premiumContentDescription);
 		instance._CheckAppKeyWithWizard(premiumContentDescription);
 	}
 
-	public static void CheckAppKeyWithWizard(string premiumContentDescription, string premiumAppURL) {
-		if(instance.debugLogging) Debug.Log("AppKeyManager: Checking AppKey with wizard. Premium Content: " + premiumContentDescription + ", Premium App URL: " + premiumAppURL);
-		instance._CheckAppKeyWithWizard(premiumContentDescription, premiumAppURL);
-	}
-		
 	protected void _CheckAppKey() {
 		#if UNITY_ANDROID
 			if (debugLogging) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID, instance.debugLogging, instance.AnalyticsEnabled), where instance.AppID="+instance.AppID+", instance.debugLogging="+instance.debugLogging+", instance.AnalyticsEnabled="+instance.UserAnalytics);
@@ -68,17 +64,13 @@ public class AppKeyManager : MonoBehaviour {
 		#endif	
 	}		
 	
-	protected void _CheckAppKeyWithWizard(string premiumContentDescription, string premiumAppURL) {
+	protected void _CheckAppKeyWithWizard(string premiumContentDescription) {
 		#if UNITY_ANDROID
-			if (debugLogging) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,instance,debugLogging,instance.AnalyticsEnabled,premiumContentDescription,premiumAppURL), where instance.AppID="+instance.AppID+", instance.debugLogging="+instance.debugLogging+", instance.AnalyticsEnabled="+instance.UserAnalytics+", premiumContentDescription="+premiumContentDescription+", premiumAppURL="+premiumAppURL);
-			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,instance.debugLogging,instance.UserAnalytics,premiumContentDescription,premiumAppURL);
+			if (debugLogging) Debug.Log("Calling: mAppKeyPlugin.Call('checkAccess',mActivity,instance.AppID,instance,debugLogging,instance.AnalyticsEnabled,premiumContentDescription), where instance.AppID="+instance.AppID+", instance.debugLogging="+instance.debugLogging+", instance.AnalyticsEnabled="+instance.UserAnalytics+", premiumContentDescription="+premiumContentDescription);
+			mAppKeyPlugin.Call("checkAccessWithWizard",mActivity,instance.AppID,instance.debugLogging,instance.UserAnalytics,premiumContentDescription);
 		#else
 			Debug.LogWarning("AppKeyManager: AppKey only available on Android platform.");	
 		#endif
-	}
-	
-	protected void _CheckAppKeyWithWizard(string premiumContentDescription) {
-		_CheckAppKeyWithWizard(premiumContentDescription,"");
 	}
 	
 	public static void OpenAppKeyInStore() {
